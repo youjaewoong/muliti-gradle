@@ -1,0 +1,8 @@
+rootProject.name = 'muliti-gradle'
+include 'domain'
+findProject(':domain')?.name = 'muliti-gradle-domain'
+include 'contract'
+findProject(':contract')?.name = 'muliti-gradle-contract'
+include 'api-client'
+findProject(':api-client')?.name = 'muliti-gradle-api-client'
+include 'api-application'

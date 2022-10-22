@@ -1,0 +1,19 @@
+spring:
+  config:
+    import:
+      #- configserver:http://albamon-config-server.dev-01-comm # 로컬에서는 configserver:https://sub-config.01.dev.iconic.albamon.com 로 접속
+      - configserver:https://sub-config.01.dev.iconic.albamon.com
+      - aws-secretsmanager:dev/application
+  cloud:
+    config:
+      name: application,
+            application-domain,
+            muliti-gradle
+      profile: dev
+      enabled: true
+    bus:
+      enabled: true
+      destination: spring-cloud-bus
+    stream:
+      default:
+        group: ${spring.application.name}-${timestamp}-${random.uuid}

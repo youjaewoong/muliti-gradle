@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cdp.sample.mapper.SampleMapper">
+	
+	<resultMap id="sampleResponse" type="cdp.sample.response.SampleResponse" autoMapping="true"/>
+	
+	<select id="selectSample" resultMap="sampleResponse">
+		SELECT /* SampleMapper.selectSample */
+			 ID
+			,NAME
+			,TITLE
+			,CONTENTS
+			,TYPE
+			,REG_DT
+			,EDIT_DT
+		FROM SAMPLE
+		WHERE 1=1
+		<if test="title != null and !title.equals('')">
+          AND TITLE = #{title}
+        </if>
+		<if test="id != null and !id.equals('')">
+          AND ID = #{id}
+        </if>
+	</select>
+	
+	
+    <update id="updateSample">
+        UPDATE /* SampleMapper.deleteSample */
+        	SAMPLE
+        SET
+        	 NAME = #{name}
+            ,TITLE = #{title}
+            ,CONTENTS = #{contents}
+            ,TYPE = #{type}
+            ,EDIT_DT = GETDATE()
+        WHERE ID = #{id}
+    </update>
+
+
+    <insert id="insertSample">
+        INSERT /* SampleMapper.insertSample */
+        INTO SAMPLE (
+             NAME
+            ,TITLE
+            ,CONTENTS
+            ,TYPE
+            ,REG_DT
+            ,EDIT_DT
+        )
+        VALUES (
+        	 #{name}
+        	,#{title}
+            ,#{contents}
+            ,#{type}
+            ,GETDATE()
+            ,GETDATE() 
+        )
+    </insert>
+
+
+    <delete id="deleteSample">
+    	DELETE /* SampleMapper.deleteSample */ 
+    	FROM SAMPLE
+        WHERE ID IN
+        <foreach collection="ids" item="item" open="(" close=")" separator=",">
+        	#{item}
+        </foreach>
+    </delete>
+</mapper>

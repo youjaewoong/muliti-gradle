@@ -1,0 +1,155 @@
+buildscript {
+    rootProject.buildscript.repositories {
+        mavenCentral()
+        mavenLocal()
+        /*
+        maven {
+            url = ''
+            allowInsecureProtocol = true
+        }
+        */
+    }
+
+    rootProject.buildscript.dependencies {
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:2.7.3"
+        classpath "io.spring.gradle:dependency-management-plugin:1.0.12.RELEASE"
+        classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:3.3"
+    }
+}
+
+configurations.all {
+    resolutionStrategy {
+        // 동적 버전 탐색을 10분 캐시
+        cacheDynamicVersionsFor 0, 'minutes'
+        // 변하는 모듈(Changing Module)을 캐시하지 않음
+        cacheChangingModulesFor 0, 'seconds'
+    }
+}
+
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'io.spring.dependency-management'
+    apply plugin: 'maven-publish'
+    
+	sourceCompatibility = '1.11'
+	targetCompatibility = '1.11'
+
+    repositories {
+        mavenCentral()
+        /*
+        maven {
+            url = ''
+            allowInsecureProtocol = true
+        }
+        */
+        mavenLocal()
+    }
+
+    java {
+        withSourcesJar()
+    }
+
+    ext['log4j2.version'] = '2.18.0'
+
+    configurations {
+        compileOnly {
+            extendsFrom annotationProcessor
+        }
+        all {
+            exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+            resolutionStrategy {
+                // 동적 버전 탐색을 캐시하지 않음
+                cacheDynamicVersionsFor 0, 'minutes'
+                // 변하는 모듈(Changing Module)을 캐시하지 않음
+                cacheChangingModulesFor 0, 'seconds'
+            }
+        }
+    }
+
+    dependencyManagement {
+        imports {
+            mavenBom "org.springframework.cloud:spring-cloud-dependencies:2021.0.3"
+        }
+    }
+
+    dependencies {
+
+        implementation 'com.fasterxml.jackson.core:jackson-databind'
+        implementation 'javax.validation:validation-api'
+        implementation 'org.springframework.boot:spring-boot-starter-log4j2'
+        implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml'
+
+        developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+        compileOnly 'org.projectlombok:lombok'
+        annotationProcessor 'org.projectlombok:lombok'
+
+        testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+        // feign
+        implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+        implementation ("commons-io:commons-io") { version {require '2.11.0'} } // 보안취약성 제거 버전 강제 지정
+
+        // openapi 3.0
+        implementation "org.springdoc:springdoc-openapi-ui:$springdocOpenapiVersion"
+    }
+
+	/*
+    publishing {
+        repositories {
+            maven {
+                url = ''
+                allowInsecureProtocol = true
+            }
+        }
+    }
+    */
+
+    compileJava.options.encoding = 'UTF-8'
+
+    javadoc {
+        source = sourceSets.main.allJava
+        options.encoding = 'UTF-8'
+    }
+
+    task printlnForPublication {
+        doLast {
+            println("artifact version : " + version)
+        }
+    }
+
+    task setArtifactVersionToLocalSnapshot {
+        doLast {
+            version = version + "-LOCAL-SNAPSHOT"
+        }
+    }
+
+    task setArtifactVersionToSnapshot {
+        doLast {
+            version = version + "-SNAPSHOT"
+        }
+    }
+
+    task setArtifactVersionToRelease {
+        doLast {
+            version = version
+        }
+    }
+}
+
+apply plugin: 'org.sonarqube'
+
+sonarqube {
+    properties {
+        property 'sonar.working.directory', 'sonarqube'
+        property "sonar.projectKey", "AMMSACOL_muliti-gradle"
+        property "sonar.sources", "src/main/java"
+        property "sonar.language", "java"
+        property "sonar.sourceEncoding", "UTF-8"
+        property "sonar.test.exclusions", "src/test/**"
+        property "sonar.java.coveragePlugin", "jacoco"
+        property "sonar.coverage.jacoco.xmlReportPaths", "${project(':muliti-gradle-domain').buildDir}/jacoco/jacoco.xml"
+    }
+}
+tasks["sonarqube"].dependsOn(':muliti-gradle-domain:jacocoTestReport')

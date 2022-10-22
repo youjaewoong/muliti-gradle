@@ -1,0 +1,15 @@
+feign:
+  recruit:
+    url: http://albamon-recruit.dev-01-sub
+  product:
+    url: http://albamon-product.dev-01-sub
+  resume:
+    url: http://albamon-resume.dev-01-sub
+  general:
+    url: http://albamon-general.dev-01-sub
+  apply:
+    url: http://albamon-apply.dev-01-sub
+  member:
+    url: http://albamon-member.dev-01-sub
+  albatalk:
+    url: http://albamon-albatalk.dev-01-sub

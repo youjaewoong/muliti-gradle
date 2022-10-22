@@ -1,0 +1,44 @@
+spring:
+  # JKDB 설정
+  datasource-jkdb:
+    mybatis:
+      mapper-locations: classpath:sql/**/*.xml
+      config-location: classpath:config/mybatis-config.xml
+    hikari:
+      name: jobetcds
+      pool-name: JOBDB
+      jdbc-url: jdbc:sqlserver://localhost:1433;databaseName=tempdb;encrypt=false
+      username: sa
+      password: "Rnfkehfl1!"
+      connection-timeout: 3000
+      validation-timeout: 3000
+      minimum-idle: 1
+      max-lifetime: 240000
+      maximum-pool-size: 5
+      connection-test-query: select 1
+
+  devtools:
+    livereload:
+      enabled: false
+  
+  main:
+    allow-circular-references: true
+
+#################################################################################
+# Feign Client Target URL List
+#################################################################################
+feign:
+  recruit:
+    url: http://localhost:40101
+  product:
+    url: http://localhost:40201
+  resume:
+    url: http://localhost:40301
+  general:
+    url: http://localhost:40401
+  apply:
+    url: http://localhost:40501
+  member:
+    url: https://sub-member.01.dev.iconic.albamon.com
+  albatalk:
+    url: http://localhost:40701

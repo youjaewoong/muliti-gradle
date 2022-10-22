@@ -1,0 +1,60 @@
+plugins {
+    id 'java'
+}
+
+dependencies {
+    // module projects
+    implementation project(":muliti-gradle-contract")
+    implementation project(":muliti-gradle-domain")
+
+    // spring boot
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    // transactional
+    implementation 'org.springframework:spring-tx'
+
+
+    // Feign HttpClient to Apache HttpClient5
+    implementation 'io.github.openfeign:feign-hc5'
+
+}
+
+tasks.withType(Jar) {
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
+}
+
+test {
+    useJUnitPlatform()
+}
+
+ext {
+
+ 	BUILD_TIME = new Date().format("yyyy-MM-dd HH:mm:ss", TimeZone.getTimeZone("Asia/Seoul"))
+ 	MODULE_NAME = 'muliti-gradle'
+}
+
+bootJar {
+    enabled = true
+    archiveClassifier = ''
+    
+	doFirst{
+		println "[ CAREERPATH INFO ] ${MODULE_NAME} 모듈 Jar 빌드 시작"
+		println "[ CAREERPATH INFO ] PROJECT NAME	: MULITI-GRADLE"
+		println "[ CAREERPATH INFO ] BUILD TIME		: ${BUILD_TIME}"
+	}
+	
+    // bootJar 결과 산출 파일을 api-application.jar 로 지정하여 export 되도록 구성합니다.
+    // version 에 따라 artifact 명이 달라지지 않도록 구성합니다.
+    archiveFileName = "api-application.${archiveExtension.get()}"
+
+}
+
+jar {
+    archiveClassifier = ''
+    // bootJar 결과 산출 파일을 api-application.jar 로 지정하여 export 되도록 구성합니다.
+    // version 에 따라 artifact 명이 달라지지 않도록 구성합니다.
+    archiveFileName = "api-application.${archiveExtension.get()}"
+    enabled = true
+}
+

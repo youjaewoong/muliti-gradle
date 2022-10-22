@@ -1,0 +1,102 @@
+server:
+  port: 40701
+  error:
+    include-message: always
+    include-binding-errors: always
+    include-stacktrace: never
+    include-exception: false
+
+spring:
+  application:
+    name: api-application
+  config:
+    import:
+      - classpath:/domain/application.yml
+  devtools:
+    livereload:
+      enabled: false
+
+logging:
+  level:
+    org.springframework.boot.autoconfigure: info
+    jdbc:
+      sqlonly: off
+      sqltiming: info
+      audit: off
+      resultset: off
+      resultsettable: off
+      connection: off
+
+springdoc:
+  swagger-ui:
+    path: /cdp/swagger-ui.html
+    displayRequestDuration: true
+    operationsSorter: method
+    tagsSorter: alpha
+  default-produces-media-type: application/json
+
+common:
+  standard:
+    cors:
+      methods: GET,POST,PUT,PATCH,DELETE,OPTIONS,HEAD
+      with-credential: true
+      urls:
+        - "https://sub-swagger.01.dev.iconic.albamon.com"
+        - "https://sub-albatalk.01.dev.iconic.albamon.com"
+        - "http://localhost:40701"
+
+  ###################################################################################
+  #  Albamon Common Library(albamon-common-library)
+  ###################################################################################
+albamon:
+  common:
+    urls:
+      image:
+        server:
+          path11: "https://test-img11.albamon.kr"
+          path12: "https://test-img12.albamon.kr"
+        kr:
+          server: "https://test-img.albamon.kr"
+          domain: "https://jts-imgs.albamon.kr"
+        coimg:
+          server: "https://test-coimg.albamon.kr"
+      file:
+        server: "https://jts-file.albamon.com"
+        jts1:
+          server: "https://jts1-file.albamon.com"
+      contents:
+        server: "https://jts-contents.albamon.kr"
+        mobile:
+          server: "https://mts-mc.albamon.kr"
+      domain: "https://dev-www.albamon.com"
+      test:
+        domain: "https://test-www.albamon.com"
+      kr:
+        domain:
+          https: "https://test.albamon.kr"
+          http: "http://test.albamon.kr"
+      pay:
+        domain: "http://dev-pay.albamon.com"
+      vod:
+        upload:
+          server: "https://test-vodupload.albamon.com:444"
+      video:
+        server: "https://video.albamon.com/jts_"
+
+jobkorea:
+  common:
+    urls:
+      file:
+        server1: "https://test-coimg.jobkorea.co.kr"
+        server:
+          path: "https://test-file1.jobkorea.co.kr"
+          path1: "https://test-file2.jobkorea.co.kr"
+          path2: "https://file2test.jobkorea.co.kr"
+          path3: "https://file3.jobkorea.co.kr"
+        co:
+          server: "https://test-fileco.jobkorea.co.kr"
+      image:
+        coimg:
+          server: "https://test-coimg.jobkorea.co.kr"
+        imgs:
+          server: "https://test-imgs.jobkorea.co.kr"

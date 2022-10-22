@@ -1,0 +1,20 @@
+spring:
+  config:
+    import:
+      - configserver:http://localhost:49401
+      - aws-secretsmanager:local/application
+    activate:
+      on-profile: scc-local
+  cloud:
+    config:
+      name: application,
+            application-domain,
+            muliti-gradle
+      profile: local
+      enabled: true
+    bus:
+      enabled: true
+      destination: spring-cloud-bus
+    stream:
+      default:
+        group: ${spring.application.name}-${timestamp}-${random.uuid}

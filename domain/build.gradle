@@ -1,0 +1,97 @@
+plugins {
+    id 'java'
+    id 'jacoco'
+}
+
+dependencies {
+    // module projects
+    implementation project(":muliti-gradle-contract")
+    implementation project(":muliti-gradle-api-client")
+
+    // spring boot
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+    // jetbrains
+    implementation 'org.jetbrains:annotations:23.0.0'
+
+    // sql logging
+    implementation 'org.bgee.log4jdbc-log4j2:log4jdbc-log4j2-jdbc4.1:1.16'
+
+    // jdbc driver
+    runtimeOnly 'com.microsoft.sqlserver:mssql-jdbc'
+
+    // JsonNullable
+    implementation group: 'org.openapitools', name: 'jackson-databind-nullable', version: '0.2.1'
+
+    // Mybatis
+    implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.2.2'
+    implementation 'org.mybatis:mybatis-typehandlers-jsr310:1.0.2'
+
+    // MapStruct
+    implementation "org.mapstruct:mapstruct:$mapstructVersion"
+    
+    // ehcache
+	implementation 'org.springframework.boot:spring-boot-starter-cache:2.7.4'
+	implementation 'net.sf.ehcache:ehcache:2.10.9.2'
+    
+    // pagehelper
+    implementation 'com.github.pagehelper:pagehelper-spring-boot-starter:1.3.0'
+    
+    annotationProcessor "org.mapstruct:mapstruct-processor:$mapstructVersion"
+    testAnnotationProcessor "org.mapstruct:mapstruct-processor:$mapstructVersion"
+
+    // lombok-mapstruct-biding
+    annotationProcessor "org.projectlombok:lombok-mapstruct-binding:0.2.0"
+
+    implementation 'org.apache.commons:commons-collections4:4.4'
+
+    testCompileOnly "org.projectlombok:lombok:$lombokVersion"
+    testAnnotationProcessor "org.projectlombok:lombok:$lombokVersion"
+}
+
+compileJava {
+    options.compilerArgs += [
+            '-Amapstruct.defaultComponentModel=spring',
+            '-Amapstruct.defaultInjectionStrategy=constructor'
+    ]
+}
+
+test {
+    useJUnitPlatform()
+    finalizedBy jacocoTestReport
+}
+
+bootJar {
+    enabled = false
+}
+
+jar {
+    archiveClassifier = ''
+    enabled = true
+}
+
+jacoco {
+    toolVersion = "0.8.7"
+}
+
+jacocoTestReport {
+    dependsOn test
+
+    reports {
+        html.enabled true
+        xml.enabled true
+
+        html.destination file("${buildDir}/jacoco/jacoco.html")
+        xml.destination file("${buildDir}/jacoco/jacoco.xml")
+    }
+
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, excludes: [
+                    '**/*Config.*',
+                    '**/entity/**',
+                    '**/mapper/**'
+            ])
+        }))
+    }
+}

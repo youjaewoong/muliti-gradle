@@ -1,0 +1,4 @@
+feign:
+  cdp:
+    name: cdp
+    url: http://localhost:40701
